@@ -36,6 +36,7 @@ implied = round( tvl_usd × multiple × growth × maturity × breadth )
 - **multiple** — the median market-cap / TVL of the live-token protocols in
   the same category (at least 3 comparables), clamped to ×0.05–×0.80; a
   category with too few live comparables uses the snapshot-wide median.
+  Exchanges and wrapped, staked or bridged products are never comparables.
 - **growth** — `1 + clamp(change_7d, -50, 150) / 100 × 0.6`
 - **maturity** — `0.75 + min(age_days, 730) / 730 × 0.25` (unknown age: 365 days)
 - **breadth** — `1 + 0.03 × min(chains − 1, 5)`

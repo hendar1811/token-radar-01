@@ -16,7 +16,9 @@
 //   multiple   = the median market-cap / TVL of the live-token protocols in
 //                the same category (at least 3 of them), clamped to
 //                [0.05, 0.80]; a category with too few live comparables uses
-//                the snapshot-wide median instead.
+//                the snapshot-wide median instead. Exchanges and wrapped,
+//                staked or bridged products are never comparables: they are
+//                not the kind of business a launch is priced against.
 //   growth     = clamp(change_7d, -50, 150) per cent
 //   growthMult = 1 + growth / 100 * GROWTH_WEIGHT
 //   maturity   = 0.75 + min(age_days, 730) / 730 * 0.25   (age unknown: 365)
@@ -241,19 +243,21 @@ function median(values: number[]): number | null {
  * The comparable multiple for a category: the median market-cap / TVL of the
  * snapshot's live-token protocols in that category, when at least
  * `min_comparables` of them exist, clamped to [multiple_floor, multiple_cap];
- * otherwise the snapshot-wide median. Computed from the snapshot at run time,
- * never from a hand-kept list.
+ * otherwise the snapshot-wide median. Exchanges and wrapped, staked or
+ * bridged products are never comparables. Computed from the snapshot at run
+ * time, never from a hand-kept list.
  */
 export function comparableMultiple(
   category: string | null,
   live: SnapshotProtocol[],
   model: ModelConstants,
 ): { multiple: number; global: number; comparables: number } {
-  const ratios = live
+  const pool = live.filter((p) => p.category === null || !PRODUCT_CATEGORY.has(p.category));
+  const ratios = pool
     .filter((p) => p.mcap_usd !== null && p.tvl_usd > 0)
     .map((p) => p.mcap_usd! / p.tvl_usd);
   const global = median(ratios) ?? 0.17;
-  const same = live.filter(
+  const same = pool.filter(
     (p) => (p.category ?? 'Other') === (category ?? 'Other') && p.mcap_usd !== null && p.tvl_usd > 0,
   );
   let multiple = global;

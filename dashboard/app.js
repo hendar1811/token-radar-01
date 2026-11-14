@@ -332,7 +332,7 @@
     var reset = el('button', { class: 'button ghost', type: 'button', text: 'Reset to the model', onclick: function () { sandbox.weight = DATA.model.growth_weight; sandbox.cap = DATA.model.multiple_cap; sandbox.active = false; render(); } });
     return el('section', { class: 'panel model' },
       el('h2', { text: 'How implied value is computed' }),
-      el('p', { text: 'Every row is scored by one function of the snapshot figures. No protocol name is special-cased, and no row is hand-picked. The multiple is the median market-cap / TVL of the live-token protocols in the same category — the market\'s own price for that kind of protocol — clamped to ×' + m.multiple_floor + '–×' + m.multiple_cap + '.' }),
+      el('p', { text: 'Every row is scored by one function of the snapshot figures. No protocol name is special-cased, and no row is hand-picked. The multiple is the median market-cap / TVL of the live-token protocols in the same category — the market\'s own price for that kind of protocol — clamped to ×' + m.multiple_floor + '–×' + m.multiple_cap + '. Exchanges and wrapped, staked or bridged products are never comparables.' }),
       el('div', { class: 'formula' },
         'implied = round( tvl_usd × multiple × (1 + clamp(change_7d, ' + m.growth_floor + ', ' + m.growth_cap + ') / 100 × ' + m.growth_weight + ') × (' + m.maturity_floor + ' + min(age_days, ' + m.maturity_days + ') / ' + m.maturity_days + ' × ' + m.maturity_range + ') × (1 + ' + m.breadth_step + ' × min(chains − 1, ' + m.breadth_max_chains + ')) )'
       ),
