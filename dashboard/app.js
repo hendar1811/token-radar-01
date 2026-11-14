@@ -416,6 +416,12 @@
 
   readHash();
   render();
+  window.addEventListener('hashchange', function () {
+    var prev = state.selected;
+    readHash();
+    if (state.selected && state.selected !== prev) render();
+    else if (!state.selected && prev && dialog.open) dialog.close();
+  });
   window.addEventListener('keydown', function (e) {
     if (e.key === 'Escape' && dialog.open) dialog.close();
   });
